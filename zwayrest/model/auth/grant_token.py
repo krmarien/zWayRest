@@ -1,10 +1,12 @@
 from zwayrest import db
 
 class GrantToken(db.Model):
+    __table_args__ = {"schema": "auth"}
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'))
+    user_id = db.Column(db.Integer, db.ForeignKey('auth.user.id', ondelete='CASCADE'))
     user = db.relationship('User')
-    client_id = db.Column(db.String(40), db.ForeignKey('client.client_id'), nullable=False)
+    client_id = db.Column(db.String(40), db.ForeignKey('auth.client.client_id'), nullable=False)
     client = db.relationship('Client')
     code = db.Column(db.String(255), index=True, nullable=False)
     redirect_uri = db.Column(db.String(255))

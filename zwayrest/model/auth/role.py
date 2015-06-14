@@ -1,14 +1,17 @@
 from zwayrest import db
 
 role2action = db.Table('role2action',
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id')),
-    db.Column('action_id', db.Integer, db.ForeignKey('action.id'))
+    db.Column('role_id', db.Integer, db.ForeignKey('auth.role.id')),
+    db.Column('action_id', db.Integer, db.ForeignKey('auth.action.id')),
+    schema='auth'
 )
 
 class Role(db.Model):
+    __table_args__ = {"schema": "auth"}
+
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), unique = True)
-    parent_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    parent_id = db.Column(db.Integer, db.ForeignKey('auth.role.id'))
     parent = db.relationship('Role', uselist=False, remote_side=[id])
     actions = db.relationship('Action', secondary=role2action, backref=db.backref('roles'))
 

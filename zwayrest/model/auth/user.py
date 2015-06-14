@@ -2,11 +2,14 @@ from zwayrest import db
 from zwayrest.model.auth.role import Role
 
 user2role = db.Table('user2role',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
+    db.Column('user_id', db.Integer, db.ForeignKey('auth.user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('auth.role.id')),
+    schema='auth'
 )
 
 class User(db.Model):
+    __table_args__ = {"schema": "auth"}
+
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(64), unique = True)
     fullname = db.Column(db.String(64), unique = True)
