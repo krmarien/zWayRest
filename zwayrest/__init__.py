@@ -13,4 +13,4 @@ oauth.init_app(app)
 api = Api(app)
 api.unauthorized = lambda a: a
 
-from zwayrest.helper import oauth
+from zwayrest import restapi

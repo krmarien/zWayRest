@@ -34,9 +34,6 @@ class OAuth(object):
     @oauth.tokensetter
     def save_token(token, request, *args, **kwargs):
         toks = BearerToken.query.filter_by(client_id=request.client.client_id, user_id=request.user.id)
-        # make sure that every client has only one token connected to a user
-        for t in toks:
-            db.session.delete(t)
 
         expires_in = token.pop('expires_in')
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
@@ -90,5 +87,5 @@ class OAuth(object):
                     return f(*args, **kwargs)
                 else:
                     return abort(401)
-                return decorated if not app.config['DISABLE_AUTH'] else f
-            return wrapper
+            return decorated if not app.config['DISABLE_AUTH'] else f
+        return wrapper

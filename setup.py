@@ -9,6 +9,10 @@ setup(
     zip_safe=False,
     install_requires=[
         'Flask',
+        'Flask-RESTful',
+        'Flask-SQLAlchemy',
+        'Flask-Migrate',
+        'Flask-OAuthlib',
         'psycopg2'
     ]
 )

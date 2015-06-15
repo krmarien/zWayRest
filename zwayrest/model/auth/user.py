@@ -1,22 +1,28 @@
 from zwayrest import db
+from zwayrest.model.model_base import ModelBase
 from zwayrest.model.auth.role import Role
+from flask.ext.restful import fields, marshal
+from werkzeug import generate_password_hash, check_password_hash
 
 user2role = db.Table('user2role',
-    db.Column('user_id', db.Integer, db.ForeignKey('auth.user.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('auth.role.id')),
-    schema='auth'
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
 )
 
-class User(db.Model):
-    __table_args__ = {"schema": "auth"}
-
+class User(db.Model, ModelBase):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(64), unique = True)
     fullname = db.Column(db.String(64), unique = True)
     email = db.Column(db.String(120), index = True, unique = True)
     pwdhash = db.Column(db.String(100))
-    projects = db.Column(db.String(255))
     roles = db.relationship('Role', secondary=user2role, lazy='select', backref=db.backref('users'))
+
+    marshal_fields = {
+        'id': fields.Integer,
+        'username': fields.String,
+        'fullname': fields.String,
+        'email': fields.String
+    }
 
     def __repr__(self):
         return '<User %r> %r %r' % (self.id, self.username, self.email)
@@ -46,3 +52,17 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.pwdhash, password)
+
+    @staticmethod
+    def get_marshal_fields(filters=[], embed=[]):
+        current_fields = User.marshal_fields
+
+        if 'roles' in embed:
+            current_fields['roles'] = fields.Nested(Role.get_marshal_fields(filters, embed))
+
+        return current_fields
+
+    def marshal(self, filters=[], embed=[]):
+        current_fields = User.get_marshal_fields(filters, embed)
+
+        return marshal(self, current_fields)

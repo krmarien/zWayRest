@@ -1,8 +1,6 @@
 from zwayrest import db
 
 class Client(db.Model):
-    __table_args__ = {"schema": "auth"}
-
     name = db.Column(db.String(40))
     description = db.Column(db.String(400))
     client_id = db.Column(db.String(40), primary_key=True)
