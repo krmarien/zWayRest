@@ -10,6 +10,8 @@ class BearerToken(db.Model):
     access_token = db.Column(db.String(255), unique=True)
     refresh_token = db.Column(db.String(255), unique=True)
     expires = db.Column(db.DateTime)
+    remote_address = db.Column(db.String(45))
+    user_agent = db.Column(db.String(255))
     _scopes = db.Column(db.Text)
 
     def delete(self):

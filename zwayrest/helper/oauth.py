@@ -27,13 +27,17 @@ class OAuth(object):
     @oauth.tokengetter
     def load_token(access_token=None, refresh_token=None):
         if access_token:
-            return BearerToken.query.filter_by(access_token=access_token).first()
+            return BearerToken.query.filter_by(access_token=access_token, remote_address=request.remote_addr, user_agent=str(request.user_agent)).first()
         elif refresh_token:
-            return BearerToken.query.filter_by(refresh_token=refresh_token).first()
+            return BearerToken.query.filter_by(refresh_token=refresh_token, remote_address=request.remote_addr, user_agent=str(request.user_agent)).first()
 
     @oauth.tokensetter
-    def save_token(token, request, *args, **kwargs):
-        toks = BearerToken.query.filter_by(client_id=request.client.client_id, user_id=request.user.id)
+    def save_token(token, oauth_request, *args, **kwargs):
+        toks = BearerToken.query.filter_by(client_id=oauth_request.client.client_id, user_id=oauth_request.user.id, remote_address=request.remote_addr, user_agent=str(request.user_agent))
+
+        # make sure that every client has only one token connected to a user per user agent
+        for t in toks:
+            db.session.delete(t)
 
         expires_in = token.pop('expires_in')
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
@@ -44,8 +48,10 @@ class OAuth(object):
             token_type=token['token_type'],
             _scopes=token['scope'],
             expires=expires,
-            client_id=request.client.client_id,
-            user_id=request.user.id,
+            client_id=oauth_request.client.client_id,
+            user_id=oauth_request.user.id,
+            remote_address=request.remote_addr,
+            user_agent=str(request.user_agent),
         )
         db.session.add(tok)
         db.session.commit()
@@ -60,7 +66,7 @@ class OAuth(object):
 
     @staticmethod
     def get_current_user():
-        if request.oauth is None:
+        if not has_attr(request, 'oauth'):
             return None
         return request.oauth.user
 
