@@ -42,7 +42,7 @@ def build_acl():
     """Build ACL Tree"""
 
     print "Building ACL Tree ..."
-    for role, info in roles.iteritems():
+    for role_name, info in roles.iteritems():
         parent_id = None
         actions = []
 
@@ -57,14 +57,14 @@ def build_acl():
 
             actions.append(Action.query.filter_by(name=action_name).one())
 
-        role = Role.query.filter_by(name=role).first()
+        role = Role.query.filter_by(name=role_name).first()
         if role is None:
-            db.session.add(Role(name=role, parent_id=parent_id, actions=actions))
+            db.session.add(Role(name=role_name, parent_id=parent_id, actions=actions))
         else:
             role.parent_id = parent_id
             role.actions = actions
 
-    db.session.commit()
+        db.session.commit()
 
 @InitCommand.command
 def create_client():

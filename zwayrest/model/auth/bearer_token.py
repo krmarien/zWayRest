@@ -3,9 +3,13 @@ from zwayrest.model.model_base import ModelBase
 from zwayrest.model.auth.client import Client
 from zwayrest.model.auth.user import User
 from flask.ext.restful import fields, marshal
+import uuid
+
+def uuid_gen():
+    return str(uuid.uuid4())
 
 class BearerToken(db.Model, ModelBase):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(128), primary_key=True, default=uuid_gen)
     client_id = db.Column(db.String(40), db.ForeignKey('client.client_id'), nullable=False)
     client = db.relationship('Client')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -19,7 +23,7 @@ class BearerToken(db.Model, ModelBase):
     _scopes = db.Column(db.Text)
 
     marshal_fields = {
-        'id': fields.Integer,
+        'id': fields.String,
         'expires': fields.DateTime(dt_format='iso8601'),
         'remote_address': fields.String,
         'user_agent': fields.String
