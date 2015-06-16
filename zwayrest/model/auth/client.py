@@ -1,6 +1,8 @@
 from zwayrest import db
+from zwayrest.model.model_base import ModelBase
+from flask.ext.restful import fields, marshal
 
-class Client(db.Model):
+class Client(db.Model, ModelBase):
     name = db.Column(db.String(40))
     description = db.Column(db.String(400))
     client_id = db.Column(db.String(40), primary_key=True)
@@ -8,6 +10,11 @@ class Client(db.Model):
     is_confidential = db.Column(db.Boolean)
     _redirect_uris = db.Column(db.Text)
     _default_scopes = db.Column(db.Text)
+
+    marshal_fields = {
+        'name': fields.String,
+        'description': fields.String,
+    }
 
     @property
     def client_type(self):
@@ -30,3 +37,14 @@ class Client(db.Model):
         if self._default_scopes:
             return self._default_scopes.split()
         return []
+
+    @staticmethod
+    def get_marshal_fields(filters=[], embed=[]):
+        current_fields = Client.marshal_fields
+
+        return current_fields
+
+    def marshal(self, filters=[], embed=[]):
+        current_fields = Client.get_marshal_fields(filters, embed)
+
+        return marshal(self, current_fields)

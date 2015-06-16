@@ -1,6 +1,10 @@
 from zwayrest import db
+from zwayrest.model.model_base import ModelBase
+from zwayrest.model.auth.client import Client
+from zwayrest.model.auth.user import User
+from flask.ext.restful import fields, marshal
 
-class BearerToken(db.Model):
+class BearerToken(db.Model, ModelBase):
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.String(40), db.ForeignKey('client.client_id'), nullable=False)
     client = db.relationship('Client')
@@ -14,6 +18,13 @@ class BearerToken(db.Model):
     user_agent = db.Column(db.String(255))
     _scopes = db.Column(db.Text)
 
+    marshal_fields = {
+        'id': fields.Integer,
+        'expires': fields.DateTime(dt_format='iso8601'),
+        'remote_address': fields.String,
+        'user_agent': fields.String
+    }
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -24,3 +35,17 @@ class BearerToken(db.Model):
         if self._scopes:
             return self._scopes.split()
         return []
+
+    @staticmethod
+    def get_marshal_fields(filters=[], embed=[]):
+        current_fields = BearerToken.marshal_fields
+
+        current_fields['client'] = fields.Nested(Client.get_marshal_fields(filters, embed))
+        current_fields['user'] = fields.Nested(User.get_marshal_fields(filters, embed))
+
+        return current_fields
+
+    def marshal(self, filters=[], embed=[]):
+        current_fields = BearerToken.get_marshal_fields(filters, embed)
+
+        return marshal(self, current_fields)

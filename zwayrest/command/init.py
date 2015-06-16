@@ -16,7 +16,10 @@ roles = OrderedDict([
     ('user', {
         'parent': 'guest',
         'actions': [
-            'account.account.get'
+            'account.account.get',
+            'account.session_list.get',
+            'account.session.get',
+            'account.session.delete'
         ]
     }),
     ('admin', {
@@ -48,7 +51,7 @@ def build_acl():
             parent_id = parent.id
 
         for action_name in info['actions']:
-            action = Action.query.filter_by(name=action).first()
+            action = Action.query.filter_by(name=action_name).first()
             if action is None:
                db.session.add(Action(name=action_name))
 
