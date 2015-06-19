@@ -1,4 +1,4 @@
-from flask import request, abort
+from flask import abort
 from zwayrest import db
 from zwayrest.helper.oauth import OAuth
 from zwayrest.helper.router import Router

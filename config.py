@@ -12,3 +12,5 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 OAUTH2_PROVIDER_TOKEN_EXPIRES_IN = 60*60*24*30
 
 DISABLE_AUTH = False
+
+ZWAY_URL = 'http://127.0.0.1:8043'

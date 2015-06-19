@@ -19,7 +19,8 @@ roles = OrderedDict([
             'account.account.get',
             'account.session_list.get',
             'account.session.get',
-            'account.session.delete'
+            'account.session.delete',
+            'zway.get'
         ]
     }),
     ('admin', {
