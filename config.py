@@ -14,3 +14,7 @@ OAUTH2_PROVIDER_TOKEN_EXPIRES_IN = 60*60*24*30
 DISABLE_AUTH = False
 
 ZWAY_URL = 'http://127.0.0.1:8043'
+
+SMTP_HOST = 'localhost'
+SMTP_PORT = 1025
+SMTP_SENDER = 'zway@localhost'
