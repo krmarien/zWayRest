@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from zwayrest import app, oauth, db
+from zwayrest.helper.auth import Auth as AuthHelper
 from zwayrest.model.auth.client import Client
 from zwayrest.model.auth.grant_token import GrantToken
 from zwayrest.model.auth.bearer_token import BearerToken
@@ -68,8 +69,13 @@ class OAuth(object):
     @oauth.usergetter
     def get_user(username, password, *args, **kwargs):
         user = User.query.filter_by(username=username).first()
-        if user and user.check_password(password):
-            return user
+        if user and user.active:
+            if user.check_password(password):
+                AuthHelper.login_succeeded(user)
+                return user
+
+            AuthHelper.login_failed(user)
+
         return None
 
     @staticmethod

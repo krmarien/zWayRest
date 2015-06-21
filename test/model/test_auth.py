@@ -63,6 +63,8 @@ class TestModelAuth(TestBase):
         assert test_user.username == 'username'
         assert test_user.fullname == 'Full Name'
         assert test_user.email == 'email@test.com'
+        assert test_user.active == True
+        assert test_user.failed_logins == 0
         assert len(test_user.roles) == 1
         assert test_user.roles[0].name == 'test_role'
         assert test_user.check_password('pwd') == True
@@ -95,7 +97,8 @@ class TestModelAuth(TestBase):
         db.session.add(test_user)
 
         expire_time = datetime.now().replace(microsecond=0)
-        test_token = model.auth.bearer_token.BearerToken(client=test_client, user=test_user, token_type='type', access_token='832ief', refresh_token='28poief', expires=expire_time, remote_address='127.0.0.1', user_agent='Safari', _scopes='scope1 scope2')
+        last_active = datetime.now().replace(microsecond=0)
+        test_token = model.auth.bearer_token.BearerToken(client=test_client, user=test_user, token_type='type', access_token='832ief', refresh_token='28poief', expires=expire_time, last_active=last_active, remote_address='127.0.0.1', user_agent='Safari', _scopes='scope1 scope2')
         db.session.add(test_token)
         db.session.commit()
 
@@ -109,6 +112,7 @@ class TestModelAuth(TestBase):
         assert test_token.access_token == '832ief'
         assert test_token.refresh_token == '28poief'
         assert test_token.expires == expire_time
+        assert test_token.last_active == last_active
         assert test_token.remote_address == '127.0.0.1'
         assert test_token.user_agent == 'Safari'
         assert len(test_token.scopes) == 2

@@ -16,6 +16,8 @@ class User(db.Model, ModelBase):
     email = db.Column(db.String(120), index = True, unique = True)
     pwdhash = db.Column(db.String(100))
     roles = db.relationship('Role', secondary=user2role, lazy='select', backref=db.backref('users'))
+    active = db.Column(db.Boolean, default=True, nullable=False)
+    failed_logins = db.Column(db.Integer, default=0, nullable=False)
 
     marshal_fields = {
         'id': fields.Integer,
@@ -26,18 +28,6 @@ class User(db.Model, ModelBase):
 
     def __repr__(self):
         return '<User %r> %r %r' % (self.id, self.username, self.email)
-
-    def is_authenticated(self):
-       return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return unicode(self.id)
 
     def get_roles(self):
         roles = set([])
