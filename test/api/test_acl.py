@@ -96,6 +96,8 @@ class TestAcl(TestBase):
             url = '/account/sessions/%s' % (token.id)
         elif action == 'account.session_list':
             url = '/account/sessions'
+        elif action == 'zway':
+            url = '/zway/test'
         else:
             assert(0)
 

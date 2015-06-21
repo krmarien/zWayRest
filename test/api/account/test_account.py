@@ -30,9 +30,9 @@ class TestAcl(TestBase):
         data = dict(access_token=token.access_token)
         response = self.app.get('/api/v1/account?%s' % url_encode(data))
         user_data = self.check_api_response(response)
-        assert user_data['user']['email'] == email
-        assert user_data['user']['username'] == username
-        assert user_data['user']['fullname'] == fullname
+        assert user_data['account']['email'] == email
+        assert user_data['account']['username'] == username
+        assert user_data['account']['fullname'] == fullname
 
     def test_put_account(self):
         # Build ACL
@@ -57,9 +57,9 @@ class TestAcl(TestBase):
         post_data = dict(fullname='New Name', email='new@email.test')
         response = self.app.put('/api/v1/account?%s' % url_encode(data), data=json.dumps(post_data), content_type='application/json')
         user_data = self.check_api_response(response)
-        assert user_data['user']['email'] == 'new@email.test'
-        assert user_data['user']['username'] == username
-        assert user_data['user']['fullname'] == 'New Name'
+        assert user_data['account']['email'] == 'new@email.test'
+        assert user_data['account']['username'] == username
+        assert user_data['account']['fullname'] == 'New Name'
 
     def test_put_password(self):
         # Build ACL
@@ -83,19 +83,19 @@ class TestAcl(TestBase):
 
         # Update password
         data = dict(access_token=access_token)
-        post_data = dict(old_password='adminpwd', new_password='newpwd', repeat_password='newpwd', options='password')
+        post_data = dict(old_password='adminpwd', new_password='newpwd', password_repeat='newpwd', options='password')
         response = self.app.put('/api/v1/account?%s' % url_encode(data), data=json.dumps(post_data), content_type='application/json')
         user_data = self.check_api_response(response)
-        assert user_data['user']['email'] == email
-        assert user_data['user']['username'] == username
-        assert user_data['user']['fullname'] == fullname
+        assert user_data['account']['email'] == email
+        assert user_data['account']['username'] == username
+        assert user_data['account']['fullname'] == fullname
 
         user = model.auth.user.User.query.first()
         assert user.check_password('newpwd')
 
         # Try to update with wrong old password
         data = dict(access_token=access_token)
-        post_data = dict(old_password='wrongpwd', new_password='newpwd', repeat_password='newpwd', options='password')
+        post_data = dict(old_password='wrongpwd', new_password='newpwd', password_repeat='newpwd', options='password')
         response = self.app.put('/api/v1/account?%s' % url_encode(data), data=json.dumps(post_data), content_type='application/json')
         user_data = self.check_api_response(response, 409)
 
@@ -104,7 +104,7 @@ class TestAcl(TestBase):
 
         # Try to update with wrong repeated password
         data = dict(access_token=access_token)
-        post_data = dict(old_password='newpwd', new_password='anothernewpwd', repeat_password='wrongnewpwd', options='password')
+        post_data = dict(old_password='newpwd', new_password='anothernewpwd', password_repeat='wrongnewpwd', options='password')
         response = self.app.put('/api/v1/account?%s' % url_encode(data), data=json.dumps(post_data), content_type='application/json')
         user_data = self.check_api_response(response, 409)
 

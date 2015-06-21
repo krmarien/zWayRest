@@ -27,5 +27,5 @@ class TestApiOAuth(TestBase):
         data = dict(access_token=token_data['access_token'])
         response = self.app.get('/api/v1/account?%s' % url_encode(data))
         user_data = self.check_api_response(response)
-        assert user_data['user']['email'] == email
-        assert user_data['user']['username'] == username
+        assert user_data['account']['email'] == email
+        assert user_data['account']['username'] == username

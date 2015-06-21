@@ -16,8 +16,9 @@ class Zway(Resource):
 
         url = '%s/%s' % (base, path)
 
-        r = requests.get(url)
+        #r = requests.get(url)
 
-        return r.json()
+        #return r.json()
+        return {'zway': url}
 
 Router.add_route(Zway, '/zway/<string:path>', 'zway')

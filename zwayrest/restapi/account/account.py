@@ -17,7 +17,7 @@ class Account(Resource):
         if self.get_user() is None:
             return abort(401)
 
-        return {'user': self.get_user().marshal(self.filters, self.embed)}
+        return {'account': self.get_user().marshal(self.filters, self.embed)}
 
     @OAuth.check_acl('account.account.put')
     def put(self):
@@ -32,13 +32,18 @@ class Account(Resource):
             reqparse_put = reqparse.RequestParser()
             reqparse_put.add_argument('old_password', required = True, type = str, location = 'json')
             reqparse_put.add_argument('new_password', required = True, type = str, location = 'json')
-            reqparse_put.add_argument('repeat_password', required = True, type = str, location = 'json')
+            reqparse_put.add_argument('password_repeat', required = True, type = str, location = 'json')
             args = reqparse_put.parse_args()
+
+            print args
 
             if not user.check_password(args['old_password']):
                 return {'error': 'Passwords do not match'},409
 
-            if args['new_password'] != args['repeat_password']:
+            if len(args['new_password']) == 0:
+                return {'error': 'Provide a new password'},409
+
+            if args['new_password'] != args['password_repeat']:
                 return {'error': 'Passwords do not match'},409
 
             user.set_password(args['new_password'])
@@ -55,6 +60,6 @@ class Account(Resource):
 
             db.session.commit()
 
-        return {'user': user.marshal(self.filters, self.embed)}
+        return {'account': user.marshal(self.filters, self.embed)}
 
 Router.add_route(Account, '/account', 'account')
