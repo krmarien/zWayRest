@@ -17,14 +17,14 @@ class BearerToken(db.Model, ModelBase):
     token_type = db.Column(db.String(40))
     access_token = db.Column(db.String(255), unique=True)
     refresh_token = db.Column(db.String(255), unique=True)
-    expires = db.Column(db.DateTime)
+    expires = db.Column(db.DateTime())
+    last_active = db.Column(db.DateTime())
     remote_address = db.Column(db.String(45))
     user_agent = db.Column(db.String(255))
     _scopes = db.Column(db.Text)
 
     marshal_fields = {
         'id': fields.String,
-        'expires': fields.DateTime(dt_format='iso8601'),
         'remote_address': fields.String,
         'user_agent': fields.String
     }
@@ -52,4 +52,16 @@ class BearerToken(db.Model, ModelBase):
     def marshal(self, filters=[], embed=[]):
         current_fields = BearerToken.get_marshal_fields(filters, embed)
 
-        return marshal(self, current_fields)
+        marshalled = marshal(self, current_fields)
+
+        if self.expires is None:
+            marshalled['expires'] = ''
+        else:
+            marshalled['expires'] = self.expires.isoformat() + '+0000'
+
+        if self.last_active is None:
+            marshalled['last_active'] = ''
+        else:
+            marshalled['last_active'] = self.last_active.isoformat() + '+0000'
+
+        return marshalled

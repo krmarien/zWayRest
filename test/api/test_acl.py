@@ -84,14 +84,9 @@ class TestAcl(TestBase):
         if action == 'account.account':
             url = '/account'
         elif action == 'account.session':
-            client = model.auth.client.Client(name='client', description='description', client_id='527jdkdsf', client_secret='sdfhlasdf23', is_confidential=True, _redirect_uris='/', _default_scopes='scope1')
-            db.session.add(client)
             user = model.auth.user.User.query.first()
 
-            token = model.auth.bearer_token.BearerToken(client=client, user=user, token_type='type', access_token='832ief', refresh_token='28poief', expires=datetime.now().replace(microsecond=0), remote_address='127.0.0.1', user_agent='Safari', _scopes='scope1 scope2')
-            db.session.add(token)
-
-            token = model.auth.bearer_token.BearerToken.query.first()
+            token = model.auth.bearer_token.BearerToken.query.filter_by(user=user).first()
 
             url = '/account/sessions/%s' % (token.id)
         elif action == 'account.session_list':

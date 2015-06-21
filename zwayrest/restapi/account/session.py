@@ -45,7 +45,7 @@ class Session(Resource):
     def delete(self, session_id):
         if self.get_user() is None:
             return abort(401)
-        print session_id
+
         session = BearerToken.query.filter_by(user=self.get_user(), id=session_id).first();
 
         if session == None:

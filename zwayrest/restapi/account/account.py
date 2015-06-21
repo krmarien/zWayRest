@@ -35,8 +35,6 @@ class Account(Resource):
             reqparse_put.add_argument('password_repeat', required = True, type = str, location = 'json')
             args = reqparse_put.parse_args()
 
-            print args
-
             if not user.check_password(args['old_password']):
                 return {'error': 'Passwords do not match'},409
 
@@ -51,7 +49,7 @@ class Account(Resource):
             db.session.commit()
         else:
             reqparse_put = reqparse.RequestParser()
-            reqparse_put.add_argument('fullname', required = True, type = str, location = 'json')
+            reqparse_put.add_argument('fullname', required = True, type = unicode, location = 'json')
             reqparse_put.add_argument('email', required = True, type = str, location = 'json')
             args = reqparse_put.parse_args()
 

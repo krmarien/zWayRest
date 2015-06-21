@@ -27,9 +27,15 @@ class OAuth(object):
     @oauth.tokengetter
     def load_token(access_token=None, refresh_token=None):
         if access_token:
-            return BearerToken.query.filter_by(access_token=access_token, remote_address=request.remote_addr, user_agent=str(request.user_agent)).first()
+            token = BearerToken.query.filter_by(access_token=access_token, remote_address=request.remote_addr, user_agent=str(request.user_agent)).first()
         elif refresh_token:
-            return BearerToken.query.filter_by(refresh_token=refresh_token, remote_address=request.remote_addr, user_agent=str(request.user_agent)).first()
+            token = BearerToken.query.filter_by(refresh_token=refresh_token, remote_address=request.remote_addr, user_agent=str(request.user_agent)).first()
+
+        if token is not None:
+            token.last_active = datetime.utcnow()
+            db.session.commit()
+
+        return token
 
     @oauth.tokensetter
     def save_token(token, oauth_request, *args, **kwargs):
@@ -43,18 +49,20 @@ class OAuth(object):
         expires = datetime.utcnow() + timedelta(seconds=expires_in)
 
         tok = BearerToken(
-            access_token=token['access_token'],
-            refresh_token=token['refresh_token'],
-            token_type=token['token_type'],
-            _scopes=token['scope'],
-            expires=expires,
-            client_id=oauth_request.client.client_id,
-            user_id=oauth_request.user.id,
-            remote_address=request.remote_addr,
-            user_agent=str(request.user_agent),
+            access_token = token['access_token'],
+            refresh_token = token['refresh_token'],
+            token_type = token['token_type'],
+            _scopes = token['scope'],
+            expires = expires,
+            last_active = datetime.utcnow(),
+            client_id = oauth_request.client.client_id,
+            user_id = oauth_request.user.id,
+            remote_address = request.remote_addr,
+            user_agent = str(request.user_agent),
         )
         db.session.add(tok)
         db.session.commit()
+
         return tok
 
     @oauth.usergetter
