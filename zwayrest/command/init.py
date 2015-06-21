@@ -17,6 +17,7 @@ roles = OrderedDict([
         'parent': 'guest',
         'actions': [
             'account.account.get',
+            'account.account.put',
             'account.session_list.get',
             'account.session.get',
             'account.session.delete',

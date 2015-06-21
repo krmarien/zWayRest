@@ -11,11 +11,7 @@ class TestBase(object):
 
         self.app = app.test_client()
 
-        #db.create_all()
-
     def teardown_class(self):
-        #db.session.remove()
-        #db.drop_all()
         pass
 
     def check_api_response(self, response, status_code=200):
