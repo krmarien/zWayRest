@@ -23,7 +23,7 @@ class SessionList(Resource):
 
         return {'sessions' : sessionList}
 
-Router.add_route(SessionList, '/account/sessions', 'session_list')
+Router.add_route(SessionList, '/account/sessions', 'account.session_list')
 
 class Session(Resource):
     def __init__(self):
@@ -58,4 +58,4 @@ class Session(Resource):
 
         return {'session': marshaled}
 
-Router.add_route(Session, '/account/sessions/<string:session_id>', 'session')
+Router.add_route(Session, '/account/sessions/<string:session_id>', 'account.session')

@@ -2,7 +2,7 @@ from zwayrest import app
 import os
 
 import zwayrest.restapi.account
-import zwayrest.restapi.zway
+import zwayrest.restapi.zwave
 
 @app.route('/<path:path>')
 def static_proxy(path):

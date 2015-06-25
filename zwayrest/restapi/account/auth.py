@@ -10,4 +10,4 @@ class Auth(Resource):
     def get(self):
         return None
 
-Router.add_route(Auth, '/auth', 'auth')
+Router.add_route(Auth, '/auth', 'account.auth')

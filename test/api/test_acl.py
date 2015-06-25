@@ -91,8 +91,10 @@ class TestAcl(TestBase):
             url = '/account/sessions/%s' % (token.id)
         elif action == 'account.session_list':
             url = '/account/sessions'
-        elif action == 'zway':
-            url = '/zway/test'
+        elif action == 'zwave.account.device_list':
+            url = '/zwave/account/devices'
+        elif action == 'zwave.zway':
+            url = '/zwave/zway/test'
         else:
             assert(0)
 

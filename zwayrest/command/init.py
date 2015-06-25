@@ -21,7 +21,8 @@ roles = OrderedDict([
             'account.session_list.get',
             'account.session.get',
             'account.session.delete',
-            'zway.get'
+            'zwave.account.device_list.get',
+            'zwave.zway.get'
         ]
     }),
     ('admin', {

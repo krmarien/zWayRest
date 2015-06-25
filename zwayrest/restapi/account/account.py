@@ -60,4 +60,4 @@ class Account(Resource):
 
         return {'account': user.marshal(self.filters, self.embed)}
 
-Router.add_route(Account, '/account', 'account')
+Router.add_route(Account, '/account', 'account.account')
