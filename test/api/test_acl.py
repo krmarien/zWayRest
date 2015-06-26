@@ -101,6 +101,10 @@ class TestAcl(TestBase):
 
             device = model.zwave.device.Device.query.first()
 
+            token = model.auth.bearer_token.BearerToken.query.filter_by(access_token=access_token).first()
+            token.user.devices = [device]
+            db.session.commit()
+
             url = '/zwave/devices/%d' % (device.id)
         elif action == 'zwave.device_list':
             url = '/zwave/devices'

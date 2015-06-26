@@ -19,7 +19,6 @@ class DeviceList(Resource):
 
             devices = DeviceModel.query.all()
         else:
-            print self.user
             devices = self.user.devices
 
         deviceList = []
@@ -43,6 +42,12 @@ class Device(Resource):
         if device is None:
             return abort(404)
 
+        print device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get')
+        print device not in self.user.devices
+        print not OAuth.has_access('zwave.device_list.all.get')
+        if device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get'):
+            return abort(401)
+
         return {'device' : device.marshal(self.filters, self.embed)}
 
     @OAuth.check_acl('zwave.device.put')
@@ -51,6 +56,9 @@ class Device(Resource):
 
         if device is None:
             return abort(404)
+
+        if device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get'):
+            return abort(401)
 
         reqparse_put = reqparse.RequestParser()
         reqparse_put.add_argument('name', required = True, type = unicode, location = 'json')
