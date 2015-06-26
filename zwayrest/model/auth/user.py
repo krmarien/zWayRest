@@ -18,6 +18,12 @@ class User(db.Model, ModelBase):
     roles = db.relationship('Role', secondary=user2role, lazy='select', backref=db.backref('users'))
     active = db.Column(db.Boolean, default=True, nullable=False)
     failed_logins = db.Column(db.Integer, default=0, nullable=False)
+    type = db.Column(db.String(50))
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'user',
+        'polymorphic_on': type
+    }
 
     marshal_fields = {
         'id': fields.Integer,

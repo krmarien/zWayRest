@@ -1,5 +1,5 @@
 from zwayrest import db, model
-from zwayrest.model.auth.user import User
+from zwayrest.model.zwave.auth.zwave_user import ZwaveUser as User
 from zwayrest.model.auth.role import Role
 from zwayrest.model.auth.grant_token import GrantToken
 from zwayrest.model.auth.bearer_token import BearerToken

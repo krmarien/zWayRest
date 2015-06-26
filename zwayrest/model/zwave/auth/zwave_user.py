@@ -12,5 +12,9 @@ class ZwaveUser(User):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     devices = db.relationship('Device', secondary=zwave_user2device, lazy='select')
 
+    __mapper_args__ = {
+        'polymorphic_identity': 'zwave_user'
+    }
+
     def __repr__(self):
         return '<ZwaveUser %r> %r %r' % (self.id, self.username, self.email)
