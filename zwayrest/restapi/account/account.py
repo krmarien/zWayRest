@@ -7,28 +7,23 @@ from zwayrest.restapi.resource import Resource
 
 class Account(Resource):
     def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('options', type = str, location = 'json')
-
         super(Account, self).__init__()
 
     @OAuth.check_acl('account.account.get')
     def get(self):
-        if self.get_user() is None:
+        if self.user is None:
             return abort(401)
 
-        return {'account': self.get_user().marshal(self.filters, self.embed)}
+        return {'account': self.user.marshal(self.filters, self.embed)}
 
     @OAuth.check_acl('account.account.put')
     def put(self):
-        args = self.reqparse.parse_args()
-
-        if self.get_user() is None:
+        if self.user is None:
             return abort(401)
 
-        user = self.get_user()
+        user = self.user
 
-        if args['options'] == 'password':
+        if 'password' in self.options:
             reqparse_put = reqparse.RequestParser()
             reqparse_put.add_argument('old_password', required = True, type = str, location = 'json')
             reqparse_put.add_argument('new_password', required = True, type = str, location = 'json')

@@ -13,7 +13,14 @@ class DeviceList(Resource):
 
     @OAuth.check_acl('zwave.device_list.get')
     def get(self):
-        devices = DeviceModel.query.all()
+        if 'all' in self.options:
+            if not OAuth.has_access('zwave.device_list.all.get'):
+                return abort(401)
+
+            devices = DeviceModel.query.all()
+        else:
+            print self.user
+            devices = self.user.devices
 
         deviceList = []
 

@@ -1,1 +1,1 @@
-from zwayrest.model.zwave.auth import user
+from zwayrest.model.zwave.auth import zwave_user

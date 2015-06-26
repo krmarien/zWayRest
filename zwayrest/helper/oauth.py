@@ -109,3 +109,20 @@ class OAuth(object):
                     return abort(401)
             return decorated if not app.config['DISABLE_AUTH'] else f
         return wrapper
+
+    @staticmethod
+    def has_access(action):
+        if request.oauth.user is None:
+            return False
+
+        roles = request.oauth.user.get_roles()
+
+        ids = []
+        for role in roles:
+            ids.append(role.id)
+
+        number = db.session.query(Action)\
+            .filter(Role.actions.any(Action.name==action))\
+            .filter(Role.id.in_(ids)).count()
+
+        return number > 0

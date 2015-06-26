@@ -21,7 +21,6 @@ roles = OrderedDict([
             'account.session_list.get',
             'account.session.get',
             'account.session.delete',
-            'zwave.account.device_list.get',
             'zwave.device.get',
             'zwave.device_list.get',
             'zwave.zway.get'
@@ -31,6 +30,7 @@ roles = OrderedDict([
         'parent': 'user',
         'actions': [
             'zwave.device.put',
+            'zwave.device_list.all.get',
         ]
     })
 ])

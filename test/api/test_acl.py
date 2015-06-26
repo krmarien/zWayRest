@@ -80,6 +80,10 @@ class TestAcl(TestBase):
             assert 0
 
     def get_url(self, action, access_token):
+        query = {
+            'access_token': access_token
+        }
+
         url = ''
         if action == 'account.account':
             url = '/account'
@@ -91,11 +95,21 @@ class TestAcl(TestBase):
             url = '/account/sessions/%s' % (token.id)
         elif action == 'account.session_list':
             url = '/account/sessions'
-        elif action == 'zwave.account.device_list':
-            url = '/zwave/account/devices'
+        elif action == 'zwave.device':
+            db.session.add(model.zwave.device.Device(name='Test Device', description='Test description'))
+            db.session.commit()
+
+            device = model.zwave.device.Device.query.first()
+
+            url = '/zwave/devices/%d' % (device.id)
+        elif action == 'zwave.device_list':
+            url = '/zwave/devices'
+        elif action == 'zwave.device_list.all':
+            query['options'] = 'all'
+            url = '/zwave/devices'
         elif action == 'zwave.zway':
             url = '/zwave/zway/test'
         else:
             assert(0)
 
-        return '/api/v1%s?access_token=%s' % (url, access_token)
+        return '/api/v1%s?%s' % (url, '&'.join(['%s=%s' % (chunk, query[chunk]) for chunk in query]))

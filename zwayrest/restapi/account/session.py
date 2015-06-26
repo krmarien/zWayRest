@@ -11,10 +11,10 @@ class SessionList(Resource):
 
     @OAuth.check_acl('account.session_list.get')
     def get(self):
-        if self.get_user() is None:
+        if self.user is None:
             return abort(401)
 
-        sessions = BearerToken.query.filter_by(user=self.get_user()).all();
+        sessions = BearerToken.query.filter_by(user=self.user).all();
 
         sessionList = []
 
@@ -31,10 +31,10 @@ class Session(Resource):
 
     @OAuth.check_acl('account.session.get')
     def get(self, session_id):
-        if self.get_user() is None:
+        if self.user is None:
             return abort(401)
 
-        session = BearerToken.query.filter_by(user=self.get_user(), id=session_id).first();
+        session = BearerToken.query.filter_by(user=self.user, id=session_id).first();
 
         if session is None:
             return abort(404)
@@ -43,10 +43,10 @@ class Session(Resource):
 
     @OAuth.check_acl('account.session.delete')
     def delete(self, session_id):
-        if self.get_user() is None:
+        if self.user is None:
             return abort(401)
 
-        session = BearerToken.query.filter_by(user=self.get_user(), id=session_id).first();
+        session = BearerToken.query.filter_by(user=self.user, id=session_id).first();
 
         if session == None:
             abort(404)
