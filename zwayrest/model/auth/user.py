@@ -1,6 +1,6 @@
 from zwayrest import db
 from zwayrest.model.model_base import ModelBase
-from zwayrest.model.auth.role import Role
+from zwayrest.model.auth import role
 from flask.ext.restful import fields, marshal
 from werkzeug import generate_password_hash, check_password_hash
 
@@ -41,6 +41,7 @@ class User(db.Model, ModelBase):
         for role in self.roles:
             roles.add(role)
             roles = roles | role.get_parents()
+
         return roles
 
     def set_password(self, password):
@@ -54,7 +55,7 @@ class User(db.Model, ModelBase):
         current_fields = User.marshal_fields
 
         if 'roles' in embed:
-            current_fields['roles'] = fields.Nested(Role.get_marshal_fields(filters, embed))
+            current_fields['roles'] = fields.Nested(role.Role.get_marshal_fields(filters, embed))
 
         return current_fields
 

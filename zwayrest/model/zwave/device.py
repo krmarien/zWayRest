@@ -1,6 +1,6 @@
 from zwayrest import db
 from zwayrest.model.model_base import ModelBase
-from zwayrest.model.zwave.device_type import DeviceType
+from zwayrest import model
 from flask.ext.restful import fields, marshal
 
 class Device(db.Model, ModelBase):
@@ -25,7 +25,10 @@ class Device(db.Model, ModelBase):
     def get_marshal_fields(filters=[], embed=[]):
         current_fields = Device.marshal_fields
 
-        current_fields['device_type'] = fields.Nested(DeviceType.get_marshal_fields(filters, embed))
+        current_fields['device_type'] = fields.Nested(model.zwave.device_type.DeviceType.get_marshal_fields(filters, embed))
+
+        if 'instances' in embed:
+            current_fields['instances'] = fields.Nested(model.zwave.instance.Instance.get_marshal_fields(filters, embed))
 
         return current_fields
 

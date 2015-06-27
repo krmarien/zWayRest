@@ -1,7 +1,7 @@
 from zwayrest import db
 from zwayrest.model.model_base import ModelBase
-from zwayrest.model.auth.client import Client
-from zwayrest.model.auth.user import User
+from zwayrest.model.auth import client
+from zwayrest.model.auth import user
 from flask.ext.restful import fields, marshal
 import uuid
 
@@ -44,8 +44,8 @@ class BearerToken(db.Model, ModelBase):
     def get_marshal_fields(filters=[], embed=[]):
         current_fields = BearerToken.marshal_fields
 
-        current_fields['client'] = fields.Nested(Client.get_marshal_fields(filters, embed))
-        current_fields['user'] = fields.Nested(User.get_marshal_fields(filters, embed))
+        current_fields['client'] = fields.Nested(client.Client.get_marshal_fields(filters, embed))
+        current_fields['user'] = fields.Nested(user.User.get_marshal_fields(filters, embed))
 
         return current_fields
 

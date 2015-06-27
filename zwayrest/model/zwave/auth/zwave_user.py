@@ -1,6 +1,5 @@
 from zwayrest import db
 from zwayrest.model.auth.user import User
-from zwayrest.model.zwave.device import Device
 from flask.ext.restful import fields, marshal
 
 zwave_user2device = db.Table('zwave_user2device',

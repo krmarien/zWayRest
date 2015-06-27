@@ -11,8 +11,8 @@ class Resource(FlaskResource):
 
         args = req_argparse.parse_args()
 
-        self.filters = args['filter'].split()
-        self.embed = args['embed'].split()
+        self.filters = args['filter'].split(',')
+        self.embed = args['embed'].split(',')
         self.limit = args['limit']
         if args['options'] is not None:
             self.options = [chunk.strip() for chunk in args['options'].split(',')]
