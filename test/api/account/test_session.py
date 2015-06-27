@@ -5,7 +5,7 @@ from werkzeug.urls import url_encode
 from zwayrest.command import init as InitCommand, user as UserCommand
 from zwayrest import model, db
 
-class TestAcl(TestBase):
+class TestSession(TestBase):
 
     def test_get(self):
         # Build ACL

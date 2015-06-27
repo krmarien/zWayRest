@@ -41,8 +41,8 @@ class DeviceType(Resource):
         reqparse_put.add_argument('description', required = True, type = unicode, location = 'json')
         args = reqparse_put.parse_args()
 
-        device.name = args['name']
-        device.description = args['description']
+        device_type.name = args['name']
+        device_type.description = args['description']
 
         db.session.commit()
 
