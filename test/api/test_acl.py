@@ -111,6 +111,48 @@ class TestAcl(TestBase):
         elif action == 'zwave.device_list.all':
             query['options'] = 'all'
             url = '/zwave/devices'
+        elif action == 'zwave.device.instance_list':
+            db.session.add(model.zwave.device.Device(name='Test Device', description='Test description'))
+            db.session.commit()
+
+            device = model.zwave.device.Device.query.first()
+
+            db.session.add(model.zwave.instance.Instance(name='Test instance', description='Test description', device=device))
+            db.session.commit()
+
+            token = model.auth.bearer_token.BearerToken.query.filter_by(access_token=access_token).first()
+            token.user.devices = [device]
+            db.session.commit()
+
+            url = '/zwave/devices/%d/instances' % (device.id)
+        elif action == 'zwave.device.instance':
+            db.session.add(model.zwave.device.Device(name='Test Device', description='Test description'))
+            db.session.commit()
+
+            device = model.zwave.device.Device.query.first()
+
+            db.session.add(model.zwave.instance.Instance(name='Test instance', description='Test description', device=device))
+            db.session.commit()
+
+            instance = model.zwave.instance.Instance.query.first()
+
+            token = model.auth.bearer_token.BearerToken.query.filter_by(access_token=access_token).first()
+            token.user.devices = [device]
+            db.session.commit()
+
+            url = '/zwave/devices/%d/instances/%d' % (device.id, instance.id)
+        elif action == 'zwave.device_type_list':
+            db.session.add(model.zwave.device_type.DeviceType(name='Test Device Type', description='Test description'))
+            db.session.commit()
+
+            url = '/zwave/device_types'
+        elif action == 'zwave.device_type':
+            db.session.add(model.zwave.device_type.DeviceType(name='Test Device Type', description='Test description'))
+            db.session.commit()
+
+            device_type = model.zwave.device_type.DeviceType.query.first()
+
+            url = '/zwave/device_types/%d' %(device_type.id)
         elif action == 'zwave.zway':
             url = '/zwave/zway/test'
         else:

@@ -1,8 +1,7 @@
 from flask import abort
-from zwayrest import db
+from zwayrest import db, model
 from zwayrest.helper.oauth import OAuth
 from zwayrest.helper.router import Router
-from zwayrest.model.auth.bearer_token import BearerToken
 from zwayrest.restapi.resource import Resource
 
 class SessionList(Resource):
@@ -14,14 +13,14 @@ class SessionList(Resource):
         if self.user is None:
             return abort(401)
 
-        sessions = BearerToken.query.filter_by(user=self.user).all();
+        sessions = model.auth.bearer_token.BearerToken.query.filter_by(user=self.user).all();
 
-        sessionList = []
+        session_list = []
 
         for session in sessions:
-            sessionList.insert(0, session.marshal(self.filters, self.embed))
+            session_list.insert(0, session.marshal(self.filters, self.embed))
 
-        return {'sessions' : sessionList}
+        return {'sessions' : session_list}
 
 Router.add_route(SessionList, '/account/sessions', 'account.session_list')
 
@@ -34,7 +33,7 @@ class Session(Resource):
         if self.user is None:
             return abort(401)
 
-        session = BearerToken.query.filter_by(user=self.user, id=session_id).first();
+        session = model.auth.bearer_token.BearerToken.query.filter_by(user=self.user, id=session_id).first();
 
         if session is None:
             return abort(404)
@@ -46,7 +45,7 @@ class Session(Resource):
         if self.user is None:
             return abort(401)
 
-        session = BearerToken.query.filter_by(user=self.user, id=session_id).first();
+        session = model.auth.bearer_token.BearerToken.query.filter_by(user=self.user, id=session_id).first();
 
         if session == None:
             abort(404)

@@ -1,10 +1,8 @@
 from flask import abort
 from flask.ext.restful import reqparse
-from zwayrest import db
+from zwayrest import db, model
 from zwayrest.helper.oauth import OAuth
 from zwayrest.helper.router import Router
-from zwayrest.model.zwave.device import Device as DeviceModel
-from zwayrest.model.zwave.device_type import DeviceType
 from zwayrest.restapi.zwave.resource import Resource
 
 class DeviceList(Resource):
@@ -17,19 +15,18 @@ class DeviceList(Resource):
             if not OAuth.has_access('zwave.device_list.all.get'):
                 return abort(401)
 
-            devices = DeviceModel.query.all()
+            devices = model.zwave.device.Device.query.all()
         else:
             devices = self.user.devices
 
-        deviceList = []
+        device_list = []
 
         for device in devices:
-            deviceList.insert(0, device.marshal(self.filters, self.embed))
+            device_list.insert(0, device.marshal(self.filters, self.embed))
 
-        return {'devices' : deviceList}
+        return {'devices' : device_list}
 
 Router.add_route(DeviceList, '/zwave/devices', 'zwave.device_list')
-
 
 class Device(Resource):
     def __init__(self):
@@ -37,14 +34,11 @@ class Device(Resource):
 
     @OAuth.check_acl('zwave.device.get')
     def get(self, device_id):
-        device = DeviceModel.query.filter_by(id=device_id).first()
+        device = model.zwave.device.Device.query.filter_by(id=device_id).first()
 
         if device is None:
             return abort(404)
 
-        print device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get')
-        print device not in self.user.devices
-        print not OAuth.has_access('zwave.device_list.all.get')
         if device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get'):
             return abort(401)
 
@@ -52,7 +46,7 @@ class Device(Resource):
 
     @OAuth.check_acl('zwave.device.put')
     def put(self, device_id):
-        device = DeviceModel.query.filter_by(id=device_id).first()
+        device = model.zwave.device.Device.query.filter_by(id=device_id).first()
 
         if device is None:
             return abort(404)
@@ -66,7 +60,7 @@ class Device(Resource):
         reqparse_put.add_argument('device_type', required = True, type = int, location = 'json')
         args = reqparse_put.parse_args()
 
-        device_type = DeviceType.query.filter_by(id=args['device_type']).first()
+        device_type = model.zwave.device_type.DeviceType.query.filter_by(id=args['device_type']).first()
 
         if device_type is None:
             return {'error': 'Device type was not found'},409
