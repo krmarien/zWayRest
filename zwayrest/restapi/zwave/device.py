@@ -40,7 +40,7 @@ class Device(Resource):
             return abort(404)
 
         if device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get'):
-            return abort(401)
+            return abort(404)
 
         return {'device' : device.marshal(self.filters, self.embed)}
 
@@ -52,7 +52,7 @@ class Device(Resource):
             return abort(404)
 
         if device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get'):
-            return abort(401)
+            return abort(404)
 
         reqparse_put = reqparse.RequestParser()
         reqparse_put.add_argument('name', required = True, type = unicode, location = 'json')
