@@ -73,11 +73,9 @@ class TestDevice(TestApiBase):
         device_1 = model.zwave.device.Device(zway_id=5, name='test_device', description='Test device 1')
         db.session.add(device_1)
         device_1 = model.zwave.device.Device.query.filter_by(zway_id=5).first()
-        device_1_id = device_1.id
         device_2 = model.zwave.device.Device(zway_id=3, name='test_device_2', description='Test device 2')
         db.session.add(device_2)
         device_2 = model.zwave.device.Device.query.filter_by(zway_id=3).first()
-        device_2_id = device_2.id
 
         user_access_token.user.devices = [device_1]
 
@@ -85,17 +83,17 @@ class TestDevice(TestApiBase):
 
         # Get device info
         data = dict(access_token=user_access_token.access_token)
-        response = self.app.get('/api/v1/zwave/devices/%d?%s' % (device_1_id, url_encode(data)))
+        response = self.app.get('/api/v1/zwave/devices/%d?%s' % (device_1.id, url_encode(data)))
         devices_data = self.check_api_response(response)
         assert devices_data['device']['zway_id'] == 5
         assert devices_data['device']['name'] == 'test_device'
         assert devices_data['device']['description'] == 'Test device 1'
 
-        response = self.app.get('/api/v1/zwave/devices/%d?%s' % (device_2_id, url_encode(data)))
+        response = self.app.get('/api/v1/zwave/devices/%d?%s' % (device_2.id, url_encode(data)))
         self.check_api_response(response, 404)
 
         data = dict(access_token=admin_access_token.access_token)
-        response = self.app.get('/api/v1/zwave/devices/%d?%s' % (device_2_id, url_encode(data)))
+        response = self.app.get('/api/v1/zwave/devices/%d?%s' % (device_2.id, url_encode(data)))
         devices_data = self.check_api_response(response)
         assert devices_data['device']['zway_id'] == 3
         assert devices_data['device']['name'] == 'test_device_2'
@@ -108,11 +106,9 @@ class TestDevice(TestApiBase):
         device_1 = model.zwave.device.Device(zway_id=5, name='test_device', description='Test device 1')
         db.session.add(device_1)
         device_1 = model.zwave.device.Device.query.filter_by(zway_id=5).first()
-        device_1_id = device_1.id
         device_2 = model.zwave.device.Device(zway_id=3, name='test_device_2', description='Test device 2')
         db.session.add(device_2)
         device_2 = model.zwave.device.Device.query.filter_by(zway_id=3).first()
-        device_2_id = device_2.id
 
         user_access_token.user.devices = [device_1]
 

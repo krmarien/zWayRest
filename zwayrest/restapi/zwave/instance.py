@@ -17,7 +17,7 @@ class InstanceList(Resource):
             return abort(404)
 
         if device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get'):
-            return abort(401)
+            return abort(404)
 
         instances = model.zwave.instance.Instance.query.filter_by(device=device).all()
 
@@ -42,7 +42,7 @@ class Instance(Resource):
             return abort(404)
 
         if instance.device not in self.user.devices and not OAuth.has_access('zwave.device_list.all.get'):
-            return abort(401)
+            return abort(404)
 
         return {'instance' : instance.marshal(self.filters, self.embed)}
 
