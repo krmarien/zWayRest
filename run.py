@@ -6,6 +6,7 @@ from flask.ext.migrate import Migrate, MigrateCommand
 from zwayrest import app, db
 from zwayrest.command.init import InitCommand
 from zwayrest.command.user import UserCommand
+from zwayrest.command.zwave.init import ZwaveInitCommand
 
 import os, json, random
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -16,6 +17,7 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 manager.add_command('init', InitCommand)
 manager.add_command('user', UserCommand)
+manager.add_command('zwave_init', ZwaveInitCommand)
 
 if __name__ == '__main__':
    app.debug = True

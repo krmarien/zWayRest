@@ -30,7 +30,7 @@ class TestModelZwave(TestBase):
         assert test_user.devices[0].name == 'test_device'
 
     def test_command_group(self):
-        test_command_group = model.zwave.command_group.CommandGroup(name='test_command_group', description='Test Description')
+        test_command_group = model.zwave.command_group.CommandGroup(name='test_command_group', description='Test Description', zway_id=4)
         db.session.add(test_command_group)
 
         assert model.zwave.command_group.CommandGroup.query.count() == 1
@@ -38,10 +38,11 @@ class TestModelZwave(TestBase):
         test_command_group = model.zwave.command_group.CommandGroup.query.first()
 
         assert test_command_group.name == 'test_command_group'
+        assert test_command_group.zway_id == 4
         assert test_command_group.description == 'Test Description'
 
     def test_device_type(self):
-        test_device_type = model.zwave.device_type.DeviceType(name='test_device_type', description='Test Description')
+        test_device_type = model.zwave.device_type.DeviceType(name='test_device_type', zway_id=5, description='Test Description')
         db.session.add(test_device_type)
 
         assert model.zwave.device_type.DeviceType.query.count() == 1
@@ -49,6 +50,7 @@ class TestModelZwave(TestBase):
         test_device_type = model.zwave.device_type.DeviceType.query.first()
 
         assert test_device_type.name == 'test_device_type'
+        assert test_device_type.zway_id == 5
         assert test_device_type.description == 'Test Description'
 
     def test_device(self):

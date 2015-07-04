@@ -17,7 +17,7 @@ class TestInstance(TestApiBase):
 
         user_access_token.user.devices = [device_1]
 
-        command_group = model.zwave.command_group.CommandGroup(name='test_group', description='Test instance')
+        command_group = model.zwave.command_group.CommandGroup(name='test_group', description='Test instance', zway_id=4)
         db.session.add(command_group)
 
         instance = model.zwave.instance.Instance(name='test_instance', description='Test instance', device=device_1, command_groups=[command_group])
@@ -50,6 +50,7 @@ class TestInstance(TestApiBase):
         assert instances_data['instances'][0]['name'] == 'test_instance'
         assert instances_data['instances'][0]['description'] == 'Test instance'
         assert len(instances_data['instances'][0]['command_groups']) == 1
+        assert instances_data['instances'][0]['command_groups'][0]['zway_id'] == 4
 
     def test_get(self):
         user_access_token = self.get_access_token_for_role('user')
@@ -64,7 +65,7 @@ class TestInstance(TestApiBase):
 
         user_access_token.user.devices = [device_1]
 
-        command_group = model.zwave.command_group.CommandGroup(name='test_group', description='Test instance')
+        command_group = model.zwave.command_group.CommandGroup(name='test_group', description='Test instance', zway_id=4)
         db.session.add(command_group)
 
         instance_1 = model.zwave.instance.Instance(name='test_instance', description='Test instance', device=device_1, command_groups=[command_group])

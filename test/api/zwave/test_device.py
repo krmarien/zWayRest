@@ -17,7 +17,7 @@ class TestDevice(TestApiBase):
 
         user_access_token.user.devices = [device_1]
 
-        command_group = model.zwave.command_group.CommandGroup(name='test_group', description='Test instance')
+        command_group = model.zwave.command_group.CommandGroup(name='test_group', description='Test instance', zway_id=4)
         db.session.add(command_group)
 
         instance = model.zwave.instance.Instance(name='test_instance', description='Test instance', device=device_1, command_groups=[command_group])
@@ -65,6 +65,7 @@ class TestDevice(TestApiBase):
         assert len(devices_data['devices'][0]['instances']) == 1
         assert devices_data['devices'][0]['instances'][0]['name'] == 'test_instance'
         assert len(devices_data['devices'][0]['instances'][0]['command_groups']) == 1
+        assert devices_data['devices'][0]['instances'][0]['command_groups'][0]['zway_id'] == 4
 
     def test_get(self):
         user_access_token = self.get_access_token_for_role('user')
@@ -120,7 +121,7 @@ class TestDevice(TestApiBase):
         # Update device info
         data = dict(access_token=admin_access_token.access_token)
         post_data = dict(name='new_name', description='new_description', device_type=device_type.id)
-        response = self.app.put('/api/v1/zwave/devices/%d?%s' % (device_1_id, url_encode(data)), data=json.dumps(post_data), content_type='application/json')
+        response = self.app.put('/api/v1/zwave/devices/%d?%s' % (device_1.id, url_encode(data)), data=json.dumps(post_data), content_type='application/json')
         devices_data = self.check_api_response(response)
         assert devices_data['device']['zway_id'] == 5
         assert devices_data['device']['name'] == post_data['name']

@@ -4,11 +4,13 @@ from flask.ext.restful import fields, marshal
 
 class DeviceType(db.Model, ModelBase):
     id = db.Column(db.Integer, primary_key = True)
+    zway_id = db.Column(db.Integer, unique = True)
     name = db.Column(db.String(50))
     description = db.Column(db.Text())
 
     marshal_fields = {
         'id': fields.Integer,
+        'zway_id': fields.Integer,
         'name': fields.String,
         'description': fields.String
     }

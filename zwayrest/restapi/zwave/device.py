@@ -1,8 +1,9 @@
 from flask import abort
 from flask.ext.restful import reqparse
-from zwayrest import db, model
+from zwayrest import app, db, model
 from zwayrest.helper.oauth import OAuth
 from zwayrest.helper.router import Router
+from zwayrest.helper.zwave.devices.update import Update as UpdateDevices
 from zwayrest.restapi.zwave.resource import Resource
 
 class DeviceList(Resource):
@@ -11,6 +12,9 @@ class DeviceList(Resource):
 
     @OAuth.check_acl('zwave.device_list.get')
     def get(self):
+        if 'update' in self.options:
+            UpdateDevices.import_devices('%s/Run/devices' % (app.config['ZWAY_URL']))
+
         if 'all' in self.options:
             if not OAuth.has_access('zwave.device_list.all.get'):
                 return abort(401)
