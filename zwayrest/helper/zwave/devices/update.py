@@ -57,4 +57,10 @@ class Update(object):
 
     @staticmethod
     def create_command_group(instance, zway_id, data):
-        pass
+        commandGroup = model.zwave.command_group.CommandGroup.query.filter_by(zway_id=zway_id).first()
+
+        if commandGroup is None:
+            commandGroup = model.zwave.command_group.CommandGroup(zway_id=zway_id, name=data['name'])
+            db.session.add(commandGroup)
+
+        instance.command_groups.append(commandGroup)
