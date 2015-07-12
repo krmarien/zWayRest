@@ -5,3 +5,5 @@ from zwayrest.restapi.zwave.instance import Instance
 from zwayrest.restapi.zwave.instance import InstanceList
 from zwayrest.restapi.zwave.device_type import DeviceType
 from zwayrest.restapi.zwave.device_type import DeviceTypeList
+from zwayrest.restapi.zwave.command_group import CommandGroup
+from zwayrest.restapi.zwave.command_group import CommandGroupList

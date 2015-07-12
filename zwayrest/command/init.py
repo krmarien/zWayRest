@@ -26,7 +26,9 @@ roles = OrderedDict([
             'zwave.device.instance_list.get',
             'zwave.device.instance.get',
             'zwave.device_type_list.get',
-            'zwave.device_type.get'
+            'zwave.device_type.get',
+            'zwave.command_group_list.get',
+            'zwave.command_group.get'
         ]
     }),
     ('admin', {
@@ -35,7 +37,8 @@ roles = OrderedDict([
             'zwave.device.put',
             'zwave.device_list.all.get',
             'zwave.device.instance.put',
-            'zwave.device_type.put'
+            'zwave.device_type.put',
+            'zwave.command_group.put'
         ]
     })
 ])

@@ -15,6 +15,7 @@ class TestBase(object):
         pass
 
     def check_api_response(self, response, status_code=200):
+        print response.data
         assert response.headers['Content-Type'] == 'application/json'
         assert response.status_code == status_code
 

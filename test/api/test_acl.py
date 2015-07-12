@@ -152,7 +152,19 @@ class TestAcl(TestBase):
 
             device_type = model.zwave.device_type.DeviceType.query.first()
 
-            url = '/zwave/device_types/%d' %(device_type.id)
+            url = '/zwave/device_types/%d' % (device_type.id)
+        elif action == 'zwave.command_group_list':
+            db.session.add(model.zwave.command_group.CommandGroup(name='Test Command Group', description='Test description'))
+            db.session.commit()
+
+            url = '/zwave/command_groups'
+        elif action == 'zwave.command_group':
+            db.session.add(model.zwave.command_group.CommandGroup(name='Test Command Group', description='Test description'))
+            db.session.commit()
+
+            command_group = model.zwave.command_group.CommandGroup.query.first()
+
+            url = '/zwave/command_groups/%d' % (command_group.id)
         elif action == 'zwave.zway':
             url = '/zwave/zway/test'
         else:
