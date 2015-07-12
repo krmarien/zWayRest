@@ -20,6 +20,7 @@ class Instance(db.Model, ModelBase):
     marshal_fields = {
         'id': fields.Integer,
         'zway_id': fields.Integer,
+        'device_id': fields.Integer,
         'name': fields.String,
         'description': fields.String
     }
