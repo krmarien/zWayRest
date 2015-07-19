@@ -67,6 +67,17 @@ class TestDevice(TestApiBase):
         assert len(devices_data['devices'][0]['instances'][0]['command_groups']) == 1
         assert devices_data['devices'][0]['instances'][0]['command_groups'][0]['zway_id'] == 4
 
+        # Get device info with users
+        data = dict(access_token=user_access_token.access_token, embed='users')
+        response = self.app.get('/api/v1/zwave/devices?%s' % url_encode(data))
+        devices_data = self.check_api_response(response)
+        assert len(devices_data['devices']) == 1
+        assert devices_data['devices'][0]['zway_id'] == 5
+        assert devices_data['devices'][0]['name'] == 'test_device'
+        assert devices_data['devices'][0]['description'] == 'Test device 1'
+        assert len(devices_data['devices'][0]['users']) == 1
+        assert devices_data['devices'][0]['users'][0]['username'] == 'user'
+
     def test_get(self):
         user_access_token = self.get_access_token_for_role('user')
         admin_access_token = self.get_access_token_for_role('admin')

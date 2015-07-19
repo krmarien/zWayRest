@@ -30,6 +30,12 @@ class Device(db.Model, ModelBase):
         if 'instances' in embed:
             current_fields['instances'] = fields.Nested(model.zwave.instance.Instance.get_marshal_fields(filters, embed))
 
+        if 'users' in embed:
+            user_embed = embed
+            if 'device' in user_embed:
+                del user_embed['device']
+            current_fields['users'] = fields.Nested(model.zwave.auth.zwave_user.ZwaveUser.get_marshal_fields(filters, user_embed))
+
         return current_fields
 
     def marshal(self, filters=[], embed=[]):
